@@ -13,7 +13,7 @@ import time
 
 master = Tk()
 master.title("EX-Press")
-master.geometry("600x455")
+master.geometry("700x800")
 # window = tk.Tk()
 # window.title("EX-Press")
 # window.geometry("600x455")
@@ -78,32 +78,33 @@ def run_file_5():
     root = Tk()
 
     # specify size of window.
-    root.geometry("250x170")
+    root.geometry("500x600")
 
     # Create text widget and specify size.
-    T = Text(root, height=5, width=52)
+    T = Text(root, height=10, width=60)
 
     # Create label
-    l = Label(root, text="Fact of the Day")
+    l = Label(root, text="Suggestion")
     l.config(font=("Courier", 14))
 
-    Fact = """A man can be arrested in
-    Italy for wearing a skirt in public."""
+    positive = te.generateFeedback()
 
+    Fact = "From the graph the hotter region (red color region) refers to the coordinates where the hand was placed on the longer duration of time."
+    print(positive)
+    Fact1 = """"""
+    if (positive):
+        Fact1 = "As you can see in the plot , you have moved your hands a lot , they appeared in really many places and that is a good sign on having a good body language "
+    else:
+        Fact1 = "There wasn't much of hand movements in your presentation .Using your hand as a story telling tool is how you can best explain yourself  Improve your hand movements for better impact of your presentaion"
     # Create button for next text.
-    b1 = Button(root, text="Next", )
-
-    # Create an Exit button.
-    b2 = Button(root, text="Exit",
-                command=root.destroy)
-
+    Fact += Fact1
+    print(Fact)
     l.pack()
     T.pack()
-    b1.pack()
-    b2.pack()
 
     # Insert The Fact.
     T.insert(tk.END, Fact)
+    # T.insert(tk.END, Fact1)
 
     tk.mainloop()
 # Create the buttons
@@ -111,38 +112,38 @@ def run_file_5():
 
 button1 = tk.Button(text="Capture", bg="beige",
                     activebackground="light blue", command=te.capture)
-button1.configure(height=5, width=20)
-button1.pack(pady=5, padx=5)
-button1.config(font=("Playfair", 8, "bold"))
+button1.configure(height=7, width=25)
+button1.pack(pady=4, padx=4)
+button1.config(font=("Playfair", 12, "bold"))
 button1.config(borderwidth=2, relief="groove")
 
 button2 = tk.Button(text="Hand Gesture Analysis", bg="beige",
                     activebackground="light blue", command=run_file_2)
 # partial(te.plotInit, te.coordLx, te.coordLy, "Left Hand")
-button2.configure(height=5, width=20)
-button2.pack(pady=5, padx=5)
-button2.config(font=("Playfair", 8, "bold"))
+button2.configure(height=7, width=25)
+button2.pack(pady=4, padx=4)
+button2.config(font=("Playfair", 12, "bold"))
 button2.config(borderwidth=2, relief="groove")
 
 button5 = tk.Button(text="Hand Gesture Suggestion", bg="beige",
                     activebackground="light blue", command=run_file_5)
-button5.configure(height=5, width=20)
-button5.pack(pady=5, padx=5)
-button5.config(font=("Playfair", 8, "bold"))
+button5.configure(height=7, width=25)
+button5.pack(pady=4, padx=4)
+button5.config(font=("Playfair", 12, "bold"))
 button5.config(borderwidth=2, relief="groove")
 
 button3 = tk.Button(text="Facial Expression Analysis", bg="beige",
                     activebackground="light blue", command=run_file_3)
-button3.configure(height=5, width=20)
-button3.pack(pady=5, padx=5)
-button3.config(font=("Playfair", 8, "bold"))
+button3.configure(height=7, width=25)
+button3.pack(pady=4, padx=4)
+button3.config(font=("Playfair", 12, "bold"))
 button3.config(borderwidth=2, relief="groove")
 
 button4 = tk.Button(text="Speech Analysis", bg="beige",
                     activebackground="light blue", command=run_file_4)
-button4.configure(height=5, width=20)
-button4.pack(pady=5, padx=5)
-button4.config(font=("Playfair", 8, "bold"))
+button4.configure(height=7, width=25)
+button4.pack(pady=4, padx=4)
+button4.config(font=("Playfair", 12, "bold"))
 button4.config(borderwidth=2, relief="groove")
 
 

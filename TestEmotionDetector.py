@@ -68,10 +68,16 @@ def capture():
             # predict the emotions
             emotion_prediction = emotion_model.predict(cropped_img)
             maxindex = int(np.argmax(emotion_prediction))
+            print("Prediction   : ", emotion_prediction, maxindex)
+            exp = emotion_dict[maxindex]
+            print(exp, " : ", emotion_dict[maxindex])
+            if (exp == 'Fearful'):
+                exp = 'Neutral'
+                maxindex = 4
 
             count_emotion[emotion_dict[maxindex]] += 1
 
-            cv2.putText(frame, emotion_dict[maxindex], (x+5, y-20),
+            cv2.putText(frame, exp, (x+5, y-20),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
         hands, img = detector.findHands(frame)  # with draw
         # hands = detector.findHands(img, draw=False) # without draw
@@ -81,15 +87,12 @@ def capture():
             if (handType1 == 'Left'):
                 # Hand 1
                 hand1 = hands[0]
-                lmList1 = hand1["lmList"]  # List of 21 Landmark points
-                bbox1 = hand1["bbox"]  # Bounding box info x,y,w,h
-                for i in range(0, 1000):
-                    coordLx.append(hand1['bbox'][0])
-                    coordLy.append(hand1['bbox'][1])
+                lmList1 = hand1["lmList"]
+                bbox1 = hand1["bbox"]
+                coordLx.append(hand1['bbox'][0])
+                coordLy.append(hand1['bbox'][1])
                 minnX = min(minnX, hand1['bbox'][0])
                 maxxX = max(maxxX, hand1['bbox'][1])
-                centerPoint1 = hand1['center']  # center of the hand cx,cy
-                # print("Left hand")
 
             # fingers1 = detector.fingersUp(hand1)
 
@@ -103,9 +106,8 @@ def capture():
                 bbox2 = hand2["bbox"]  # Bounding box info x,y,w,h
                 centerPoint2 = hand2['center']  # center of the hand cx,cy
                 handType2 = hand2["type"]  # Hand Type "Left" or "Right"
-                for i in range(0, 1000):
-                    coordLx.append(hand2['bbox'][0])
-                    coordLy.append(hand2['bbox'][1])
+                coordLx.append(hand2['bbox'][0])
+                coordLy.append(hand2['bbox'][1])
                 minnY = min(minnY, hand2['bbox'][0])
                 maxxY = max(maxxY, hand2['bbox'][1])
                 fingers2 = detector.fingersUp(hand2)
@@ -130,7 +132,7 @@ def myplot(x, y, s, bins=1000):
     return heatmap.T, extent
 
 
-def generateFeedback(x, y):
+def generateFeedback():
     print("Min and max of x coords is %d ", " %d ", minnX, minnY)
     print("Min and max of y coords is %d ", " %d ", minnY, maxxY)
 
@@ -139,8 +141,10 @@ def generateFeedback(x, y):
     text = "The hotter (red color region ) shows that your hand was placed in the region for longer region"
     if (difX > 150 and difY > 100):
         print("There was a good movement of hand  ")
+        return True
     else:
         print("Try moving your hand much frequently ")
+    return False
 
 
 def plotInit(x, y):
@@ -161,14 +165,16 @@ def plotInit(x, y):
             ax.set_title(titleScatter)
         else:
             img, extent = myplot(x, y, s)
-            ax.imshow(img, extent=extent, origin='lower', cmap=cm.jet)
+
+            ax.imshow(img, extent=extent,
+                      origin='lower', cmap=cm.jet)
             ax.set_title(titleHeat)
             # ax.set_title("Heatmap of Right hand movements")
 
     # chart1 = FigureCanvasTkAgg(fig, frameChartsLT)
     # chart1.get_tk_widget().pack()
     #  displaying feedback
-    generateFeedback(x, y)
+    # generateFeedback()
     plt.show()
 
 
@@ -203,9 +209,9 @@ def analyze():
     ll.pack()
 
     # the x locations for the groups
-    width = 1
+    width = .5
 
-    rects1 = ax.bar(list(count_emotion.keys()), count_emotion.values(), width)
+    rects1 = ax.barh(list(count_emotion.keys()), count_emotion.values(), width)
 
     canvas = FigureCanvasTkAgg(f, master=root)
     canvas.draw()
@@ -223,6 +229,24 @@ def analyze():
     l = tk.Label(root, text="Analysis ")
     l.config(font=("Courier", 14))
     Fact = expr
+    Fact1 = ""
+    # {"Angry": 0, "Disgusted": 0, "Happy": 0,
+    #              "Neutral": 0, "Sad": 0, "Surprised": 0, "Fearful": 0}
+    if (Fact == 'Angry'):
+        Fact1 = "The dominant expression in your presentation is Angry.You Appeared To Be Triggered From The Audience,Try To Focus On Yourself And Try To Connect With The Audience On An Emotional Level."
+    if (Fact == 'Disgusted'):
+        Fact1 = "The dominant expression in your presentation is Disgusted."
+    if (Fact == 'Happy'):
+        Fact1 = "The dominant expression in your presentation is Happy.You Appeared To Be Happy During Your Presentation,That's Great.It May Make You More Likeable Among The Audience And The Presentation Could Be More Engaging. "
+    if (Fact == 'Neutral'):
+        Fact1 = "The dominant expression in your presentation is Neutral.Being Pretty Neutral Is Fine,But Try Not To Mix Up Emotions And Confuse Your Audience"
+    if (Fact == 'Sad'):
+        Fact1 = "The dominant expression in your presentation is Sad.This Might Have A Negative Impact On The Audience,So Try To Be More Lively And Confident While Speaking."
+    if (Fact == 'Surprised'):
+        Fact1 = "The dominant expression in your presentation is Surprised."
+    if (Fact == 'Fearful'):
+        Fact1 = "The dominant expression in your presentation is Fearful.In Some Sections You Depicted Fear,So We Feel That You Are Not Confident In Some Of The Topics,Try To Work On Those Weak Spots,Remember Confidence Is Key"
+    Fact = Fact1
     l.pack()
     T.pack()
     T.insert(tk.END, Fact)
